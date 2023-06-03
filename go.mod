@@ -1,4 +1,4 @@
-module github.com/pomdtr/survey
+module github.com/pomdtr/ask
 
 go 1.20
 
