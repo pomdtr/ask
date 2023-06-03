@@ -1,4 +1,4 @@
-# Survey
+# Ask
 
 A cli for the [survey](https://github.com/go-survey/survey) library.
 
@@ -6,42 +6,36 @@ A cli for the [survey](https://github.com/go-survey/survey) library.
 
 ```bash
 # brew
-brew install pomdtr/tap/survey
+brew install pomdtr/tap/ask
 
 # from source
-go install github.com/pomdtr/survey@latest
+go install github.com/pomdtr/ask@latest
 ```
 
-Or download the packages from [github releases](https:github.com/pomdtr/survey/releases).
+Or download the packages from [github releases](https:github.com/pomdtr/ask/releases).
 
 ## Usage
 
 ### Ask for input
 
 ```bash
-survey input --message "What is your name?" --default "John Doe"
-```
-
-### Ask for password
-
-```bash
-survey password --message "What is your password?"
+ask input --message "What is your name?" --default "John Doe"
 ```
 
 ### Ask for confirmation
 
 ```bash
-survey confirm --message "Are you sure?"
+ask confirm --message "Are you sure?"
 ```
 
 ### Ask for selection
 
 ```bash
-ls -1 | survey select --message "Select a file"
+ls -1 | ask select --message "Select a file"
 ```
 
 ### Ask for long input
 
 ```bash
-survey edit --message "Write a commit message"
+ask edit --message "Write a commit message"
 ```

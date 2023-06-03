@@ -15,14 +15,29 @@ import (
 
 func NewCmdInput() *cobra.Command {
 	flags := struct {
-		Message string
-		Default string
+		Message  string
+		Password bool
+		Default  string
 	}{}
 
 	cmd := &cobra.Command{
 		Use:   "input",
 		Short: "ask for input",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			var response string
+
+			var prompt survey.Prompt
+			if flags.Password {
+				prompt = &survey.Password{
+					Message: flags.Message,
+				}
+			} else {
+				prompt = &survey.Input{
+					Message: flags.Message,
+					Default: flags.Default,
+				}
+			}
+
 			input := os.Stdin
 			if !isatty.IsTerminal(os.Stdin.Fd()) {
 				i, err := os.Open("/dev/tty")
@@ -33,11 +48,6 @@ func NewCmdInput() *cobra.Command {
 				input = i
 			}
 
-			var response string
-			prompt := &survey.Input{
-				Message: flags.Message,
-				Default: flags.Default,
-			}
 			if err := survey.AskOne(prompt, &response, survey.WithStdio(input, os.Stderr, os.Stderr)); err != nil {
 				return err
 			}
@@ -47,48 +57,12 @@ func NewCmdInput() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&flags.Message, "message", "Input...", "message to display")
+	cmd.Flags().StringVarP(&flags.Message, "message", "m", "Input...", "message to display")
+
+	cmd.Flags().BoolVar(&flags.Password, "password", false, "password input")
 	cmd.Flags().StringVar(&flags.Default, "default", "", "default value")
+	cmd.MarkFlagsMutuallyExclusive("password", "default")
 
-	return cmd
-}
-
-func NewCmdPassword() *cobra.Command {
-	flags := struct {
-		Message string
-	}{}
-
-	cmd := &cobra.Command{
-		Use:   "password",
-		Short: "ask for password",
-		Args:  cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			var response string
-
-			prompt := &survey.Password{
-				Message: flags.Message,
-			}
-
-			input := os.Stdin
-			if !isatty.IsTerminal(os.Stdin.Fd()) {
-				i, err := os.Open("/dev/tty")
-				if err != nil {
-					return err
-				}
-				defer i.Close()
-				input = i
-			}
-
-			if err := survey.AskOne(prompt, &response, survey.WithStdio(input, os.Stderr, os.Stderr)); err != nil {
-				return err
-			}
-
-			fmt.Print(response)
-			return nil
-		},
-	}
-
-	cmd.Flags().StringVar(&flags.Message, "message", "Password...", "message to display")
 	return cmd
 }
 
@@ -139,8 +113,9 @@ func NewCmdConfirm() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&flags.Message, "message", "Confirm...", "message to display")
+	cmd.Flags().StringVarP(&flags.Message, "message", "m", "Confirm...", "message to display")
 	cmd.Flags().StringVar(&flags.Default, "default", "", "default value")
+
 	return cmd
 }
 
@@ -192,7 +167,8 @@ func NewCmdSelect() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&flags.message, "message", "Select...", "message to display")
+	cmd.Flags().StringVarP(&flags.message, "message", "m", "Select...", "message to display")
+
 	return cmd
 }
 
@@ -241,7 +217,8 @@ func NewCmdEdit() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&flags.message, "message", "Edit...", "message to display")
+	cmd.Flags().StringVarP(&flags.message, "message", "m", "Edit...", "message to display")
+
 	return cmd
 }
 
@@ -253,7 +230,6 @@ func Execute() error {
 	}
 
 	cmd.AddCommand(NewCmdInput())
-	cmd.AddCommand(NewCmdPassword())
 	cmd.AddCommand(NewCmdConfirm())
 	cmd.AddCommand(NewCmdSelect())
 	cmd.AddCommand(NewCmdEdit())
