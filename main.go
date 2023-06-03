@@ -27,8 +27,10 @@ func Execute() error {
 		Use:          "ask <question>",
 		Short:        "ask a question",
 		SilenceUsage: true,
-		Args:         cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if len(args) == 0 {
+				return cmd.Usage()
+			}
 			if flags.GenerateCompletions {
 				switch args[0] {
 				case "bash":
