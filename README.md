@@ -19,23 +19,29 @@ Or download the packages from [github releases](https:github.com/pomdtr/ask/rele
 ### Ask for input
 
 ```bash
-ask input --message "What is your name?" --default "John Doe"
+ask "What is your name?"
+```
+
+### Ask for password
+
+```bash
+ask --password "What is your password?"
 ```
 
 ### Ask for confirmation
 
 ```bash
-ask confirm --message "Are you sure?"
+ask --confirm "Are you sure?"
 ```
 
 ### Ask for selection
 
 ```bash
-ls -1 | ask select --message "Select a file"
+ls -1 | ask --select "Select a file:"
 ```
 
 ### Ask for long input
 
 ```bash
-ask edit --message "Write a commit message"
+ask --edit "Write a commit message:"
 ```
