@@ -126,7 +126,11 @@ func Execute() error {
 				return err
 			}
 
-			fmt.Print(response)
+			if isatty.IsTerminal(os.Stdout.Fd()) {
+				fmt.Println(response)
+			} else {
+				fmt.Print(response)
+			}
 			return nil
 		},
 	}
