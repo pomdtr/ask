@@ -15,11 +15,12 @@ import (
 
 func Execute() error {
 	flags := struct {
-		Default  string
-		Password bool
-		Select   bool
-		Confirm  bool
-		Edit     bool
+		Default             string
+		GenerateCompletions bool
+		Password            bool
+		Select              bool
+		Confirm             bool
+		Edit                bool
 	}{}
 
 	cmd := &cobra.Command{
@@ -28,6 +29,21 @@ func Execute() error {
 		SilenceUsage: true,
 		Args:         cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if flags.GenerateCompletions {
+				switch args[0] {
+				case "bash":
+					return cmd.Root().GenBashCompletion(os.Stdout)
+				case "zsh":
+					return cmd.Root().GenZshCompletion(os.Stdout)
+				case "fish":
+					return cmd.Root().GenFishCompletion(os.Stdout, true)
+				case "powershell":
+					return cmd.Root().GenPowerShellCompletion(os.Stdout)
+				default:
+					return fmt.Errorf("invalid shell: %s", args[0])
+				}
+			}
+
 			input := os.Stdin
 			if !isatty.IsTerminal(os.Stdin.Fd()) {
 				i, err := os.Open("/dev/tty")
@@ -112,6 +128,9 @@ func Execute() error {
 			return nil
 		},
 	}
+
+	cmd.Flags().BoolVar(&flags.GenerateCompletions, "generate-completions", false, "generate completion script")
+	cmd.Flags().MarkHidden("generate-completions")
 
 	cmd.Flags().BoolVar(&flags.Password, "password", false, "password input")
 	cmd.Flags().BoolVar(&flags.Select, "select", false, "select from a list of options")
