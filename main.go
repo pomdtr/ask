@@ -15,9 +15,8 @@ import (
 
 func NewCmdInput() *cobra.Command {
 	flags := struct {
-		Message  string
-		Password bool
-		Default  string
+		Message string
+		Default string
 	}{}
 
 	cmd := &cobra.Command{
