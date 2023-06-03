@@ -60,8 +60,9 @@ func NewCmdPassword() *cobra.Command {
 	}{}
 
 	cmd := &cobra.Command{
-		Use:  "password",
-		Args: cobra.NoArgs,
+		Use:   "password",
+		Short: "ask for password",
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var response string
 
