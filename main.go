@@ -27,7 +27,7 @@ func Execute() error {
 		Use:          "ask <question>",
 		Short:        "ask a question",
 		SilenceUsage: true,
-		Args:         cobra.ExactArgs(1),
+		Args:         cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if flags.GenerateCompletions {
 				switch args[0] {
@@ -58,7 +58,7 @@ func Execute() error {
 			var prompt survey.Prompt
 			if flags.Password {
 				prompt = &survey.Password{
-					Message: args[0],
+					Message: strings.Join(args, " "),
 				}
 			} else if flags.Confirm {
 				defaultValue := false
@@ -72,7 +72,7 @@ func Execute() error {
 				}
 
 				prompt = &survey.Confirm{
-					Message: args[0],
+					Message: strings.Join(args, " "),
 					Default: defaultValue,
 				}
 			} else if flags.Select {
@@ -94,7 +94,7 @@ func Execute() error {
 				}
 
 				prompt = &survey.Select{
-					Message: args[0],
+					Message: strings.Join(args, " "),
 					Options: rows,
 				}
 			} else if flags.Edit {
@@ -108,14 +108,14 @@ func Execute() error {
 				}
 
 				prompt = &survey.Editor{
-					Message:       args[0],
+					Message:       strings.Join(args, " "),
 					Default:       defaultText,
 					HideDefault:   true,
 					AppendDefault: true,
 				}
 			} else {
 				prompt = &survey.Input{
-					Message: args[0],
+					Message: strings.Join(args, " "),
 					Default: flags.Default,
 				}
 			}
