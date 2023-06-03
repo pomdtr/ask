@@ -21,7 +21,8 @@ func NewCmdInput() *cobra.Command {
 	}{}
 
 	cmd := &cobra.Command{
-		Use: "input",
+		Use:   "input",
+		Short: "ask for input",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var response string
 
@@ -73,7 +74,8 @@ func NewCmdConfirm() *cobra.Command {
 	}{}
 
 	cmd := &cobra.Command{
-		Use: "confirm",
+		Use:   "confirm",
+		Short: "ask for confirmation",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
 			defaultValue := false
@@ -122,7 +124,8 @@ func NewCmdSelect() *cobra.Command {
 	}{}
 
 	cmd := &cobra.Command{
-		Use: "select",
+		Use:   "select",
+		Short: "select from a list of options",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if isatty.IsTerminal(os.Stdin.Fd()) {
 				return fmt.Errorf("stdin is a terminal")
@@ -173,7 +176,8 @@ func NewCmdEdit() *cobra.Command {
 	}{}
 
 	cmd := &cobra.Command{
-		Use: "edit",
+		Use:   "edit",
+		Short: "write text in an editor",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var defaultText string
 			if !isatty.IsTerminal(os.Stdin.Fd()) {
@@ -218,6 +222,7 @@ func NewCmdEdit() *cobra.Command {
 func Execute() error {
 	cmd := cobra.Command{
 		Use:          "survey",
+		Short:        "Build interactive prompts",
 		SilenceUsage: true,
 	}
 
