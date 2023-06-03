@@ -2,7 +2,7 @@
 
 A cli for the [survey](https://github.com/go-survey/survey) library, inspired by [gum](https://github.com/charmbracelet/gum).
 
-![demo](./examples/demo.gif)
+![demo](https://vhs.charm.sh/vhs-2rDv6Sx6xThz61l25M6dtl.gif)
 
 ## Installation
 
