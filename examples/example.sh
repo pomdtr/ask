@@ -2,11 +2,13 @@
 
 set -euo pipefail
 
+export EDITOR="vim"
+
 name=$(ask "What is your name?")
 
-color=$(printf "red\nblue\ngreen" | ask --select "What is your favorite color?")
+lang=$(printf "rust\ngo\npython" | ask --select "What is your favorite language?")
 
-poem=$(cat <<EOF  | ask --edit "Write me a poem"
+poem=$(cat <<EOF  | ask --edit "Write me a poem about $lang"
 In a realm where code is art,
 A language emerged, a work of craft.
 Golang, they named it, elegant and smart,
@@ -16,9 +18,10 @@ EOF
 
 cat <<EOF
 
-Your name is $name
-Your favorite color is $color
+Survey results:
 
-Your poem is:
+L Your name is $name
+L Your favorite language is $lang
+L Your poem is:
 $poem
 EOF

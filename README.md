@@ -1,6 +1,8 @@
 # Ask
 
-A cli for the [survey](https://github.com/go-survey/survey) library.
+A cli for the [survey](https://github.com/go-survey/survey) library, inspired by [gum](https://github.com/charmbracelet/gum).
+
+![demo](./examples/demo.gif)
 
 ## Installation
 
