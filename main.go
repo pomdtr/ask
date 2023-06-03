@@ -24,18 +24,49 @@ func NewCmdInput() *cobra.Command {
 		Use:   "input",
 		Short: "ask for input",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			input := os.Stdin
+			if !isatty.IsTerminal(os.Stdin.Fd()) {
+				i, err := os.Open("/dev/tty")
+				if err != nil {
+					return err
+				}
+				defer i.Close()
+				input = i
+			}
+
+			var response string
+			prompt := &survey.Input{
+				Message: flags.Message,
+				Default: flags.Default,
+			}
+			if err := survey.AskOne(prompt, &response, survey.WithStdio(input, os.Stderr, os.Stderr)); err != nil {
+				return err
+			}
+
+			fmt.Print(response)
+			return nil
+		},
+	}
+
+	cmd.Flags().StringVar(&flags.Message, "message", "Input...", "message to display")
+	cmd.Flags().StringVar(&flags.Default, "default", "", "default value")
+
+	return cmd
+}
+
+func NewCmdPassword() *cobra.Command {
+	flags := struct {
+		Message string
+	}{}
+
+	cmd := &cobra.Command{
+		Use:  "password",
+		Args: cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
 			var response string
 
-			var prompt survey.Prompt
-			if flags.Password {
-				prompt = &survey.Password{
-					Message: flags.Message,
-				}
-			} else {
-				prompt = &survey.Input{
-					Message: flags.Message,
-					Default: flags.Default,
-				}
+			prompt := &survey.Password{
+				Message: flags.Message,
 			}
 
 			input := os.Stdin
@@ -57,12 +88,7 @@ func NewCmdInput() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&flags.Message, "message", "Input...", "message to display")
-	cmd.Flags().BoolVar(&flags.Password, "password", false, "password input")
-	cmd.Flags().StringVar(&flags.Default, "default", "", "default value")
-
-	cmd.MarkFlagsMutuallyExclusive("password", "default")
-
+	cmd.Flags().StringVar(&flags.Message, "message", "Password...", "message to display")
 	return cmd
 }
 
@@ -227,6 +253,7 @@ func Execute() error {
 	}
 
 	cmd.AddCommand(NewCmdInput())
+	cmd.AddCommand(NewCmdPassword())
 	cmd.AddCommand(NewCmdConfirm())
 	cmd.AddCommand(NewCmdSelect())
 	cmd.AddCommand(NewCmdEdit())
